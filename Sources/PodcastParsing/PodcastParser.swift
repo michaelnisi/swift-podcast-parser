@@ -1,12 +1,11 @@
 import Parsing
 import CasePaths
-import Collections
 
-let contentParser: (Int?) -> AnyParserPrinter<Substring.UTF8View, XML.Node> = { indentation in
+let contentParser: () -> AnyParserPrinter<Substring.UTF8View, XML.Node> = {
   ParsePrint {
-    Whitespace(.horizontal).printing(String(repeating: " ", count: indentation ?? 0).utf8)
+    Whitespace()
     OneOf {
-      containerTagParser(indentation).map(/XML.Node.element)
+      containerTagParser().map(/XML.Node.element)
       emptyTagParser.map(/XML.Node.element)
       commentParser
       textParser
@@ -17,17 +16,17 @@ let contentParser: (Int?) -> AnyParserPrinter<Substring.UTF8View, XML.Node> = { 
   .eraseToAnyParserPrinter()
 }
 
-let containerTagParser = { (indentation: Int?) in
+let containerTagParser = {
   ParsePrint {
     openingTagParser
-    Whitespace(.vertical).printing(indentation != nil ? "\n".utf8 : "".utf8)
+    Whitespace()
     Many {
       Lazy {
-        contentParser(indentation.map { $0 + 4 })
-        Whitespace(.vertical).printing(indentation != nil ? "\n".utf8 : "".utf8)
+        contentParser()
+        Whitespace()
       }
     } terminator: {
-      Whitespace(.horizontal).printing(String(repeating: " ", count: indentation ?? 0).utf8)
+      Whitespace()
       "</".utf8
     }
     
@@ -45,23 +44,21 @@ let containerTagParser = { (indentation: Int?) in
 public struct PodcastParser: ParserPrinter {
   let parser: AnyParserPrinter<Substring.UTF8View, XML>
   
-  public init(indenting: Bool = true) {
+  public init() {
     self.parser = ParsePrint {
       Optionally {
         xmlPrologParser
-        Whitespace(.vertical)
-          .printing(indenting ? "\n".utf8 : "".utf8)
+        Whitespace()
       }
       .map(Conversions.OptionalEmptyDictionary())
       
       Optionally {
         xmlStylesheetParser
-        Whitespace(.vertical)
-          .printing(indenting ? "\n".utf8 : "".utf8)
+        Whitespace()
       }
       .map(Conversions.OptionalEmptyDictionary())
       
-      containerTagParser(indenting ? 0 : nil)
+      containerTagParser()
     }
     .map(.memberwise(XML.init(prolog:stylesheet:root:)))
     .eraseToAnyParserPrinter()

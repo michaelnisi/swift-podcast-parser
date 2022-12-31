@@ -8,7 +8,7 @@ final class SmokeTests: XCTestCase {
       let input = String(data: data, encoding: .utf8)!
       
       XCTAssertNoThrow(
-        try PodcastParser(indenting: true).parse(input),
+        try PodcastParser().parse(input),
         url.lastPathComponent
       )
     }
