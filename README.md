@@ -4,7 +4,7 @@ XML parsing is messy, especially parsing RSS and more spefically podcast feeds. 
 
 ## Podcast feeds
 
-Apple podcast RSS feed [requirements](https://podcasters.apple.com/support/823-podcast-requirements) provide the framework for the rules in this parser. Although built for podcast feeds, **swift-podcast-parser** should be applicable to parse other types of RSS feeds.
+Apple podcast RSS feed [requirements](https://podcasters.apple.com/support/823-podcast-requirements) provide the framework for the rules in this parser. Although built for podcast feeds, **swift-podcast-parser** should be applicable to parse other types of RSS feeds. 
 
 ## Tests
 
@@ -13,6 +13,10 @@ Download some transient data, before running the tests.
 ```
 $ ./Scripts/download_smoke_test_feeds.swift
 ```
+
+## Alternatives
+
+Look at [swift-xml-parser](https://github.com/JaapWijnen/swift-xml-parser) for general XML parsing by which this parser was initially inspired.
 
 ## License
 
