@@ -6,6 +6,26 @@ XML parsing is messy, especially parsing RSS and more spefically podcast feeds. 
 
 Apple podcast RSS feed [requirements](https://podcasters.apple.com/support/823-podcast-requirements) provide the framework for the rules in this parser. Although built for podcast feeds, **swift-podcast-parser** should be applicable to parse other types of RSS feeds. 
 
+## Usage
+
+With a `PodcastParser` you can parse and print.
+
+### Parsing
+
+Parsing produces an XML structure from an input String.
+
+```swift
+try PodcastParser().parse(input)
+```
+
+### Printing
+
+Printing is the reverse operation of parsing in this context.
+
+```swift
+try PodcastParser().print(xml, into: &input)
+```
+
 ## Tests
 
 Download some transient data, before running the tests.
