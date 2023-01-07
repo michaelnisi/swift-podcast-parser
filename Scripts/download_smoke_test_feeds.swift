@@ -67,16 +67,16 @@ struct Fixture: Codable {
     return try copy(at: location, to: destination)
   }
   
-  static func createResourcesDirectory() {
+  private static func createDirectory(_ url: URL) {
     do {
-      try FileManager.default.createDirectory(at: makeURL(name: resources), withIntermediateDirectories: false)
+      try FileManager.default.createDirectory(at: url, withIntermediateDirectories: false)
     } catch {
       //
     }
   }
   
   static func removeAll() throws {
-    createResourcesDirectory()
+    createDirectory(makeURL(name: resources))
     
     let dir = makeURL(name: resources)
     let urls = try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
