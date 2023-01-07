@@ -53,16 +53,31 @@ struct Fixture: Codable {
   let name: String
   let url: URL
   
-  func download() async throws -> URL {
-    let (location, _) = try await URLSession.shared.download(from: url)
-    let destination = makeURL(name: "\(resources)\(name)")
-    
+  private func copy(at location: URL, to destination: URL) throws -> URL {
     try FileManager.default.copyItem(at: location, to: destination)
+    try FileManager.default.removeItem(at: location)
     
     return destination
   }
   
+  func download() async throws -> URL {
+    let (location, _) = try await URLSession.shared.download(from: url)
+    let destination = makeURL(name: "\(resources)\(name)")
+
+    return try copy(at: location, to: destination)
+  }
+  
+  static func createResourcesDirectory() {
+    do {
+      try FileManager.default.createDirectory(at: makeURL(name: resources), withIntermediateDirectories: false)
+    } catch {
+      //
+    }
+  }
+  
   static func removeAll() throws {
+    createResourcesDirectory()
+    
     let dir = makeURL(name: resources)
     let urls = try FileManager.default.contentsOfDirectory(at: dir, includingPropertiesForKeys: nil)
     
